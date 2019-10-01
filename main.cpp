@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     std::ifstream config_file("jhue_config.json");
     pt::read_json(config_file, config);
 
-    //boost::log::add_file_log("jhue.log");
+    boost::log::add_file_log("jhue.log");
 
     boost::log::core::get()->set_filter(
       boost::log::trivial::severity >= to_log_level(config.get<std::string>("general.loglevel"))
