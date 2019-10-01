@@ -1,0 +1,38 @@
+{
+    "general": {
+        "debug": "true",
+        "loglevel": "trace"
+    },
+    "bridge": {
+        "host": "hue-ip-address-or-hostname",
+        "port": "80",
+        "api_key": "hue-api-key"
+    },
+    "lights": {
+        "10": {
+            "name": "Storage",
+            "enabled": "true",
+            "switch_off": "5"
+        },
+        "11": {
+            "name": "Entry",
+            "enabled": "true",
+            "switch_off": "5"
+        },
+        "15": {
+            "name": "Bathroom",
+            "enabled": "true",
+            "switch_off": "20"
+        },
+        "16": {
+            "name": "Toilet",
+            "enabled": "true",
+            "switch_off": "10"
+        },        
+        "17": {
+            "name": "Guestroom",
+            "enabled": "true",
+            "switch_off": "10"
+        }
+    }
+}
