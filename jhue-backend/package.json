@@ -1,0 +1,14 @@
+{
+  "name": "jhue-backend",
+  "version": "0.0.1",
+  "description": "The backend for the jhue aplication that controls the lights and keeps track of the configuration",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jan Comans",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
