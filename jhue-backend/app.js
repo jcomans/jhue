@@ -1,12 +1,13 @@
-const express = require('express')
+const app = require('express')()
 
-const app = express()
+require('dotenv').config()
+
+const axios = require('axios').default
+axios.defaults.baseURL = `http://hue.local.comans.be/api/${process.env.HUE_API_KEY}`
+
+app.use('/api', require('./api'))
+
 const port = 3000
-
-app.get('/', (req, res)=>{
-    res.send('Hello, world!')
-})
-
 app.listen(port, ()=>{
     console.log(`jhue-backend listening on port ${port}`)
 })
