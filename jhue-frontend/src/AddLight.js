@@ -75,10 +75,11 @@ class PopUp extends React.Component {
         else {
           console.log("Failed to create timed_light")
         }
+        return resp.json();
       })
+      .then(jsdata => {console.log(jsdata);})
       .catch(console.log);
 
-console.log(this.props)
     this.props.unsetCache();
     this.props.handleClose();
   }
