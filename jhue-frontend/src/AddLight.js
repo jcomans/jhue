@@ -4,6 +4,16 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
 class PopUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleAdd = this.handleAdd.bind(this);
+  }
+
+  handleAdd() {
+    console.log("Add button");
+    this.props.handleAdd();
+  }
+
   render() {
 
     return (
@@ -13,14 +23,14 @@ class PopUp extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <Form.Select>
-            {this.props.light_data.map(light => <option key={light.id} value={light.id}>{light.name}</option>)}
+            {this.props.light_data.map(light => <option key={light.unique_id} value={light.short_id}>{light.name}</option>)}
           </Form.Select>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.props.handleCancel}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={this.props.handleAdd}>
+          <Button variant="primary" onClick={this.handleAdd}>
             Add
           </Button>
         </Modal.Footer>
