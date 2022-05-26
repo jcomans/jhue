@@ -7,17 +7,34 @@ class PopUp extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {short_id:"", unique_id:"", name:"", interval:"5", enabled: true};
+    this.state = { short_id: "", unique_id: "", name: "", interval: "5", enabled: true, light_data: [] };
 
     this.handleOption = this.handleOption.bind(this);
     this.handleInterval = this.handleInterval.bind(this);
     this.handleEnable = this.handleEnable.bind(this);
 
     this.handleAdd = this.handleAdd.bind(this);
-    
+
   }
 
-  handleOption(event){
+  componentDidMount() {
+
+    fetch('http://localhost:8000/api/lights')
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({ light_data: data })
+        if (data.length) {
+          const fl = data[0];
+          this.setState({ short_id: fl.short_id, unique_id: fl.unique_id, name: fl.name })
+        }
+
+      })
+      .catch(console.log)
+
+
+  }
+
+  handleOption(event) {
 
     const idx = event.target.selectedIndex;
     const opt = event.target.options[idx]
@@ -29,17 +46,17 @@ class PopUp extends React.Component {
     })
   }
 
-  handleInterval(event){
-    this.setState({value: event.target.value});
+  handleInterval(event) {
+    this.setState({ interval: event.target.value });
   }
 
-  handleEnable(event){
-    this.setState({enabled: event.target.checked});
+  handleEnable(event) {
+    this.setState({ enabled: event.target.checked });
   }
 
   handleAdd(event) {
     event.preventDefault();
-    
+
     var url = new URL('http://localhost:8000/api/timed_lights/create');
     var params = {
       name: this.state.name,
@@ -50,11 +67,19 @@ class PopUp extends React.Component {
     };
     url.search = new URLSearchParams(params).toString();
 
-    fetch(url, {method: 'POST'})
-    .then(()=>{console.log("Created timed_light")})
-    .catch(()=>{console.log("Failed to create timed_light")})
+    fetch(url, { method: 'POST' })
+      .then((resp) => {
+        if (resp.ok) {
+          console.log("Created timed_light");
+        }
+        else {
+          console.log("Failed to create timed_light")
+        }
+      })
+      .catch(console.log);
 
-    this.props.handleAdd();
+
+    this.props.handleClose();
   }
 
   render() {
@@ -67,26 +92,26 @@ class PopUp extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <Form.Select name="light_selection" onChange={this.handleOption}>
-            {this.props.light_data.map(light => <option key={light.unique_id} unique_id={light.unique_id} value={light.short_id}>{light.name}</option>)}
+            {this.state.light_data.map(light => <option key={light.unique_id} unique_id={light.unique_id} value={light.short_id}>{light.name}</option>)}
           </Form.Select>
-          <Form.Group controlId="myform.interval">
+          <Form.Group>
             <Form.Label>Interval</Form.Label>
-            <Form.Control type="input" onChange={this.handleInterval} defaultValue={this.state.interval} />
+            <Form.Control type="input" onChange={this.handleInterval} value={this.state.interval} />
           </Form.Group>
-          <Form.Group controlId="myform.enabled">
+          <Form.Group>
             <Form.Label>Enabled</Form.Label>
-            <Form.Control type="checkbox" onChange={this.handleEnable} defaultChecked={this.state.enabled} />
+            <Form.Control type="checkbox" onChange={this.handleEnable} checked={this.state.enabled} />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.props.handleCancel}>
+          <Button variant="secondary" onClick={this.props.handleClose}>
             Cancel
           </Button>
           <Button variant="primary" onClick={this.handleAdd}>
             Add
           </Button>
         </Modal.Footer>
-        
+
       </Modal>
     );
   }
@@ -100,35 +125,23 @@ class AddLight extends React.Component {
 
     this.state = { show: false, light_data: [] };
 
-    this.handleOpen   = this.handleOpen.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleAdd    = this.handleAdd.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   handleOpen() {
-    fetch('http://localhost:8000/api/lights')
-      .then(res => res.json())
-      .then((data) => {
-        this.setState({ show: true, light_data: data })
-
-      })
-      .catch(console.log)
-
+    this.setState({ show: true });
   }
 
-  handleCancel() {
-    this.setState({show:false})
+  handleClose() {
+    this.setState({ show: false })
   }
-
-  handleAdd() {
-    this.setState({show:false})
-  }
-
   render() {
+
     return (
       <>
         <Button variant="primary" onClick={this.handleOpen}>Add Light</Button>
-        <PopUp show={this.state.show} light_data={this.state.light_data} handleCancel={this.handleCancel} handleAdd={this.handleAdd} />
+        {this.state.show && <PopUp show='true' handleClose={this.handleClose} />}
       </>
     )
   }
