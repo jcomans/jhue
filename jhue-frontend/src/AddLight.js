@@ -63,7 +63,7 @@ class PopUp extends React.Component {
       short_id: this.state.short_id,
       unique_id: this.state.unique_id,
       interval: this.state.interval,
-      enabled: this.state.enabled
+      active: this.state.enabled
     };
     url.search = new URLSearchParams(params).toString();
 
@@ -78,7 +78,8 @@ class PopUp extends React.Component {
       })
       .catch(console.log);
 
-
+console.log(this.props)
+    this.props.unsetCache();
     this.props.handleClose();
   }
 
@@ -141,7 +142,7 @@ class AddLight extends React.Component {
     return (
       <>
         <Button variant="primary" onClick={this.handleOpen}>Add Light</Button>
-        {this.state.show && <PopUp show='true' handleClose={this.handleClose} />}
+        {this.state.show && <PopUp show='true' handleClose={this.handleClose} unsetCache={this.props.unsetCache} />}
       </>
     )
   }
